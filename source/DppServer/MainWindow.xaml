@@ -1,0 +1,71 @@
+﻿<Window x:Class="DistPoServer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:core="clr-namespace:DistPoServer.Core"
+        mc:Ignorable="d"
+        Title="DPP Server" Height="350" Width="525"
+        d:DataContext="{d:DesignInstance core:ServerViewModel}" Name="ServerWindow">
+    <Viewbox Name="MainViewbox">
+        <Viewbox.Style>
+            <Style TargetType="Viewbox">
+                <Setter Property="Stretch" Value="None" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Stretch}" Value="true">
+                        <Setter Property="Stretch" Value="Fill" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Viewbox.Style>
+        <Grid>
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Width" Value="{Binding ElementName=ServerWindow,Path=Width}" />
+                    <Setter Property="Height" Value="{Binding ElementName=ServerWindow,Path=Height}" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=MainViewbox,Path=Stretch}" Value="Fill">
+                            <Setter Property="Width" Value="525" />
+                            <Setter Property="Height" Value="350" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <DockPanel>
+                <ToolBarTray DockPanel.Dock="Top">
+                    <ToolBar>
+                        <Button Command="{Binding StartCommand}" Content="Start" />
+                        <Separator />
+                        <Button Command="{Binding NewRoundCommand}" Content="New Round" />
+                        <Separator />
+                        <Button Command="{Binding RevealCommand}" Content="Reveal" />
+                        <Separator />
+                        <CheckBox Content="Stretch" IsChecked="{Binding Stretch}" />
+                    </ToolBar>
+                </ToolBarTray>
+                <ListView ItemsSource="{Binding Clients}">
+                    <ListView.View>
+                        <GridView>
+                            <GridView.ColumnHeaderContainerStyle>
+                                <Style TargetType="GridViewColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                </Style>
+                            </GridView.ColumnHeaderContainerStyle>
+                            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
+                            <GridViewColumn Header="Value" DisplayMemberBinding="{Binding Value}" Width="100" />
+                        </GridView>
+                    </ListView.View>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ReceivedData}" Value="true">
+                                    <Setter Property="Background" Value="LightGreen" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </DockPanel>
+        </Grid>
+    </Viewbox>
+</Window>
